@@ -42,38 +42,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         listView = (ListView)findViewById(R.id.bookList);
 
+        refreshBooks();
+    }
 
-        /********* Call get Book API to get all book list  ********/
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Constant.DATE_FORMAT)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
-        Call<ArrayList<Book>> listBooksCall = libraryServiceAPI.listBooks();
-        listBooksCall.enqueue(new Callback<ArrayList<Book>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Book>> call, Response<ArrayList<Book>> response) {
-                Log.d(LIST_BOOKS_RESPONSE_CODE,RESPONSE_STATUS_CODE + response.code());
-                if (response.isSuccessful()) {
-                    ArrayList<Book> books = response.body();
-                    // Set response Books as listed layout
-                    BooksAdapter booksAdapter = new BooksAdapter(getBaseContext(), R.layout.book_layout, books);
-                    listView.setAdapter(booksAdapter);
-                } else {
-                    Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Book>> call, Throwable t) {
-                Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
-            }
-        });
+    @Override
+    protected void onResume(){
+        super.onResume();
+        refreshBooks();
     }
 
     @Override
@@ -95,5 +70,40 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void refreshBooks(){
+        /********* Call get Book API to get all book list  ********/
+        Gson gson = new GsonBuilder()
+                .setDateFormat(Constant.DATE_FORMAT)
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        Call<ArrayList<Book>> listBooksCall = libraryServiceAPI.listBooks();
+        listBooksCall.enqueue(new Callback<ArrayList<Book>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Book>> call, Response<ArrayList<Book>> response) {
+                Log.d(LIST_BOOKS_RESPONSE_CODE, RESPONSE_STATUS_CODE + response.code());
+                if (response.isSuccessful()) {
+                    ArrayList<Book> books = response.body();
+                    // Set response Books as listed layout
+                    BooksAdapter booksAdapter = new BooksAdapter(getBaseContext(), R.layout.book_layout, books);
+                    listView.setAdapter(booksAdapter);
+                } else {
+                    Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Book>> call, Throwable t) {
+                Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
+            }
+        });
+    }
+
 
 }
