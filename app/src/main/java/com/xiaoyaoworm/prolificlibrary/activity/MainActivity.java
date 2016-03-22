@@ -1,5 +1,6 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.xiaoyaoworm.prolificlibrary.R;
+import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 import com.xiaoyaoworm.prolificlibrary.ui.BooksAdapter;
@@ -25,8 +27,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView listView;
-    public static final String BASE_URL = "http://prolific-interview.herokuapp.com/56eb7034cada930009ab0998/";
+    public static final String LIST_BOOKS_ERROR = "LIST_BOOKS_ERROR";
+    public static final String RESPONSE_FAILURE = "Response failure";
+    public static final String RESPONSE_STATUS_CODE = "Response status code: ";
+    public static final String LIST_BOOKS_RESPONSE_CODE = "listBooks response code";
+
+    public ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +43,13 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.bookList);
 
 
+        /********* Call get Book API to get all book list  ********/
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .setDateFormat(Constant.DATE_FORMAT)
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Constant.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -51,39 +58,38 @@ public class MainActivity extends AppCompatActivity {
         listBooksCall.enqueue(new Callback<ArrayList<Book>>() {
             @Override
             public void onResponse(Call<ArrayList<Book>> call, Response<ArrayList<Book>> response) {
-                System.out.println("Response status code: " + response.code());
+                Log.d(LIST_BOOKS_RESPONSE_CODE,RESPONSE_STATUS_CODE + response.code());
                 if (response.isSuccessful()) {
                     ArrayList<Book> books = response.body();
+                    // Set response Books as listed layout
                     BooksAdapter booksAdapter = new BooksAdapter(getBaseContext(), R.layout.book_layout, books);
                     listView.setAdapter(booksAdapter);
                 } else {
-                    Log.d("listBooks Error", String.valueOf(response.code()));
+                    Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Book>> call, Throwable t) {
-                Log.d("listBooks Error", "Response failure");
+                Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
+            // Go into add Book Activity
+            Intent addBookIntent = new Intent(this, AddBookActivity.class);
+            this.startActivity(addBookIntent);
             return true;
         }
 

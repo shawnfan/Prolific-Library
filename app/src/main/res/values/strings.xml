@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">Prolific Library</string>
     <string name="action_add">Add</string>
+
     <string name="toolbar_book">Book</string>
-    <string name="title_activity_books_detail">BooksDetailActivity</string>
-    <string name="title_activity_add_book">AddBookActivity</string>
+    <string name="title_activity_books_detail">Detail</string>
+    <string name="title_activity_add_book">Add a book</string>
+
+    <string name="book_title">Book Title</string>
+    <string name="book_author">Author</string>
+    <string name="book_publisher">Publisher</string>
+    <string name="book_categories">Categories</string>
+    <string name="button_submit">Submit</string>
 
 </resources>
