@@ -12,7 +12,7 @@ import retrofit2.http.GET;
  */
 public interface LibraryService {
 
-    @GET("/books")
+    @GET("books")
     Call<ArrayList<Book>> listBooks();
 
 }
