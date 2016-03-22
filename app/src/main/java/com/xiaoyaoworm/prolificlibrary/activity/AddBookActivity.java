@@ -96,6 +96,7 @@ public class AddBookActivity extends AppCompatActivity {
                         Book added = response.body();
                         if(added!=null) {
                             Toast.makeText(getBaseContext(), ADD_BOOK +added.getTitle()+ SUCCESSFULLY,Toast.LENGTH_LONG).show();
+                            finish();
                         }
                     } else {
                         Log.d(ADD_BOOK_ERROR, String.valueOf(response.code()));
