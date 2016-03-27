@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by xiaoyaoworm on 3/20/16.
@@ -20,4 +22,9 @@ public interface LibraryService {
     @POST("books")
     Call<Book> addBook(@Body Book book);
 
+    @GET("books/{id}")
+    Call<Book> getBookInfo(@Path("id") int bookId);
+
+    @DELETE("books/{id}")
+    Call<Void> deleteBook(@Path("id") int bookId);
 }
