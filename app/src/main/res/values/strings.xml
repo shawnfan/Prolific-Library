@@ -12,4 +12,9 @@
     <string name="book_categories">Categories</string>
     <string name="button_submit">Submit</string>
 
+
+    <string name="button_checkout">Check Out</string>
+    <string name="button_delete">Delete</string>
+
+
 </resources>

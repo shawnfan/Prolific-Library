@@ -15,9 +15,6 @@ import com.xiaoyaoworm.prolificlibrary.R;
 import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
-import com.xiaoyaoworm.prolificlibrary.ui.BooksAdapter;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,8 +91,8 @@ public class AddBookActivity extends AppCompatActivity {
                     Log.d(ADD_BOOKS_RESPONSE_CODE, RESPONSE_STATUS_CODE + response.code());
                     if (response.isSuccessful()) {
                         Book added = response.body();
-                        if(added!=null) {
-                            Toast.makeText(getBaseContext(), ADD_BOOK +added.getTitle()+ SUCCESSFULLY,Toast.LENGTH_LONG).show();
+                        if (added != null) {
+                            Toast.makeText(getBaseContext(), ADD_BOOK + added.getTitle() + SUCCESSFULLY, Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {

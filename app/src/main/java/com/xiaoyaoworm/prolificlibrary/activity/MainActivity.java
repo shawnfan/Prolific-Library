@@ -1,5 +1,6 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        listView = (ListView)findViewById(R.id.bookList);
+        listView = (ListView) findViewById(R.id.bookList);
 
         refreshBooks();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         refreshBooks();
     }
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshBooks(){
+    private void refreshBooks() {
+        final ProgressDialog loading = ProgressDialog.show(this, "Getting book list", "Please wait...", false, false);
         /********* Call get Book API to get all book list  ********/
         Gson gson = new GsonBuilder()
                 .setDateFormat(Constant.DATE_FORMAT)
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<Book>> call, Response<ArrayList<Book>> response) {
                 Log.d(LIST_BOOKS_RESPONSE_CODE, RESPONSE_STATUS_CODE + response.code());
+                loading.dismiss();
                 if (response.isSuccessful()) {
                     ArrayList<Book> books = response.body();
                     // Set response Books as listed layout
