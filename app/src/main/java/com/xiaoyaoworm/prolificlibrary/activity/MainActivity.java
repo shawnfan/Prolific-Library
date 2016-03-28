@@ -1,14 +1,17 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,9 +32,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     public static final String LIST_BOOKS_ERROR = "LIST_BOOKS_ERROR";
+    public static final String DELETE_ALL_ERROR = "DELETE_ALL_ERROR";
     public static final String RESPONSE_FAILURE = "Response failure";
     public static final String RESPONSE_STATUS_CODE = "Response status code: ";
     public static final String LIST_BOOKS_RESPONSE_CODE = "listBooks response code";
+    public static final String DELETE_ALL_SUCCESSFULLY = "Delete all books successfully.";
 
     public ListView listView;
 
@@ -67,6 +72,23 @@ public class MainActivity extends AppCompatActivity {
             Intent addBookIntent = new Intent(this, AddBookActivity.class);
             this.startActivity(addBookIntent);
             return true;
+        } else if (id == R.id.action_deleteAll) {
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setTitle("Delete All books")
+                    .setMessage("Are you sure you want to delete all books?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteAll();
+
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -103,6 +125,41 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ArrayList<Book>> call, Throwable t) {
+                Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
+            }
+        });
+    }
+
+    private void deleteAll() {
+        final ProgressDialog loading = ProgressDialog.show(this, "Delete all books", "Please wait...", false, false);
+        /********* Call delete all API to delete all books from list  ********/
+        Gson gson = new GsonBuilder()
+                .setDateFormat(Constant.DATE_FORMAT)
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        Call<Void> deleteAllCall = libraryServiceAPI.deleteAll();
+        deleteAllCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d(LIST_BOOKS_RESPONSE_CODE, RESPONSE_STATUS_CODE + response.code());
+                loading.dismiss();
+                if (response.isSuccessful()) {
+                    if (response.code() == 200) {
+                        Toast.makeText(getBaseContext(), DELETE_ALL_SUCCESSFULLY, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
             }
         });
