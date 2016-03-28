@@ -13,6 +13,7 @@
     <string name="book_publisher">Publisher</string>
     <string name="book_categories">Categories</string>
     <string name="button_submit">Submit</string>
+    <string name="button_done">Done</string>
 
 
     <string name="button_checkout">Check Out</string>
