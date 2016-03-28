@@ -18,144 +18,112 @@ public class Book {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     *
-     * @return
-     * The author
+     * @return The author
      */
     public String getAuthor() {
         return author;
     }
 
     /**
-     *
-     * @param author
-     * The author
+     * @param author The author
      */
     public void setAuthor(String author) {
         this.author = author;
     }
 
     /**
-     *
-     * @return
-     * The categories
+     * @return The categories
      */
     public String getCategories() {
         return categories;
     }
 
     /**
-     *
-     * @param categories
-     * The categories
+     * @param categories The categories
      */
     public void setCategories(String categories) {
         this.categories = categories;
     }
 
     /**
-     *
-     * @return
-     * The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     *
-     * @param id
-     * The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     *
-     * @return
-     * The lastCheckedOut
+     * @return The lastCheckedOut
      */
     public Object getLastCheckedOut() {
         return lastCheckedOut;
     }
 
     /**
-     *
-     * @param lastCheckedOut
-     * The lastCheckedOut
+     * @param lastCheckedOut The lastCheckedOut
      */
     public void setLastCheckedOut(Object lastCheckedOut) {
         this.lastCheckedOut = lastCheckedOut;
     }
 
     /**
-     *
-     * @return
-     * The lastCheckedOutBy
+     * @return The lastCheckedOutBy
      */
     public Object getLastCheckedOutBy() {
         return lastCheckedOutBy;
     }
 
     /**
-     *
-     * @param lastCheckedOutBy
-     * The lastCheckedOutBy
+     * @param lastCheckedOutBy The lastCheckedOutBy
      */
     public void setLastCheckedOutBy(Object lastCheckedOutBy) {
         this.lastCheckedOutBy = lastCheckedOutBy;
     }
 
     /**
-     *
-     * @return
-     * The title
+     * @return The title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     *
-     * @param title
-     * The title
+     * @param title The title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     *
-     * @return
-     * The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     *
-     * @param url
-     * The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     *
-     * @return
-     * The publisher
+     * @return The publisher
      */
     public String getPublisher() {
         return publisher;
     }
 
     /**
-     *
-     * @param publisher
-     * The publisher
+     * @param publisher The publisher
      */
     public void setPublisher(String publisher) {
         this.publisher = publisher;

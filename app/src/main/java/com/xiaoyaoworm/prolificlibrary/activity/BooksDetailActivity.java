@@ -1,6 +1,5 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,7 +86,7 @@ public class BooksDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         getBookInfo(bookId);
     }
