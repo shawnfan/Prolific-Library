@@ -14,11 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.xiaoyaoworm.prolificlibrary.R;
 import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
+import com.xiaoyaoworm.prolificlibrary.rest.RestClient;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 
 import java.text.SimpleDateFormat;
@@ -27,8 +26,6 @@ import java.util.Calendar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BooksDetailActivity extends AppCompatActivity {
 
@@ -130,16 +127,7 @@ public class BooksDetailActivity extends AppCompatActivity {
 
     public void getBookInfo(int bookId) {
         /********* Call get Book API to get all book list  ********/
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Constant.DATE_FORMAT)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Book> checkBookInfoCall = libraryServiceAPI.getBookInfo(bookId);
         checkBookInfoCall.enqueue(new Callback<Book>() {
             @Override
@@ -176,16 +164,7 @@ public class BooksDetailActivity extends AppCompatActivity {
 
     public void deleteBook(int bookId) {
         /********* Call delete Book API to delete this book from list  ********/
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Constant.DATE_FORMAT)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Void> deleteBookCall = libraryServiceAPI.deleteBook(bookId);
         deleteBookCall.enqueue(new Callback<Void>() {
             @Override
@@ -211,16 +190,7 @@ public class BooksDetailActivity extends AppCompatActivity {
 
     public void updateBook(Book book) {
         /********* Call update Book API to update book info  ********/
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Constant.DATE_FORMAT)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Book> updateBookCall = libraryServiceAPI.updateBook(book.getId(), book);
         updateBookCall.enqueue(new Callback<Book>() {
             @Override

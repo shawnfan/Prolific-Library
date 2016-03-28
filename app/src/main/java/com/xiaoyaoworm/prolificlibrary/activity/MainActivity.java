@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,11 +12,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.xiaoyaoworm.prolificlibrary.R;
-import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
+import com.xiaoyaoworm.prolificlibrary.rest.RestClient;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 import com.xiaoyaoworm.prolificlibrary.ui.BooksAdapter;
 
@@ -26,8 +23,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,16 +92,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshBooks() {
         final ProgressDialog loading = ProgressDialog.show(this, "Getting book list", "Please wait...", false, false);
         /********* Call get Book API to get all book list  ********/
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Constant.DATE_FORMAT)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        LibraryService libraryServiceAPI = RestClient.getClient();
         Call<ArrayList<Book>> listBooksCall = libraryServiceAPI.listBooks();
         listBooksCall.enqueue(new Callback<ArrayList<Book>>() {
             @Override
@@ -133,16 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private void deleteAll() {
         final ProgressDialog loading = ProgressDialog.show(this, "Delete all books", "Please wait...", false, false);
         /********* Call delete all API to delete all books from list  ********/
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Constant.DATE_FORMAT)
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+        LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Void> deleteAllCall = libraryServiceAPI.deleteAll();
         deleteAllCall.enqueue(new Callback<Void>() {
             @Override
@@ -154,13 +131,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), DELETE_ALL_SUCCESSFULLY, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
+                    Log.d(DELETE_ALL_ERROR, String.valueOf(response.code()));
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
+                Log.d(DELETE_ALL_ERROR, RESPONSE_FAILURE);
             }
         });
     }
