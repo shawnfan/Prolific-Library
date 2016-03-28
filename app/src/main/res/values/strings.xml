@@ -15,6 +15,9 @@
     <string name="button_submit">Submit</string>
     <string name="button_done">Done</string>
 
+    <string name="menu_share">Share</string>
+
+
 
     <string name="button_checkout">Check Out</string>
     <string name="button_delete">Delete</string>
