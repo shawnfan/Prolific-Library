@@ -1,6 +1,7 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,6 +46,13 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavUtils.navigateUpFromSameTask(AddBookActivity.this);
+            }
+        });
 
         editBookTitle = (EditText) findViewById(R.id.editBookTitle);
         editAuthor = (EditText) findViewById(R.id.editAuthor);
@@ -93,5 +101,9 @@ public class AddBookActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void done(View view){
+        super.onBackPressed();
     }
 }

@@ -3,11 +3,13 @@ package com.xiaoyaoworm.prolificlibrary.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +63,13 @@ public class BooksDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_books_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavUtils.navigateUpFromSameTask(BooksDetailActivity.this);
+            }
+        });
 
         bookTitleText = (TextView) findViewById(R.id.bookTitleText);
         bookAuthorText = (TextView) findViewById(R.id.bookAuthorText);
@@ -85,7 +94,7 @@ public class BooksDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getBookInfo(bookId);
+//        getBookInfo(bookId);
     }
 
     public void delete(View view) {
@@ -222,5 +231,16 @@ public class BooksDetailActivity extends AppCompatActivity {
                 Log.d(UPDATE_BOOK_ERROR, RESPONSE_FAILURE);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
