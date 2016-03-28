@@ -9,18 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.xiaoyaoworm.prolificlibrary.R;
-import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
+import com.xiaoyaoworm.prolificlibrary.rest.RestClient;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddBookActivity extends AppCompatActivity {
 
@@ -74,16 +70,7 @@ public class AddBookActivity extends AppCompatActivity {
             book.setCategories(editCategories.getText().toString().trim());
 
             /********* Call post Book API to add one book into list  ********/
-            Gson gson = new GsonBuilder()
-                    .setDateFormat(Constant.DATE_FORMAT)
-                    .create();
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constant.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-
-            LibraryService libraryServiceAPI = retrofit.create(LibraryService.class);
+            LibraryService libraryServiceAPI = RestClient.getClient();
             Call<Book> addBookCall = libraryServiceAPI.addBook(book);
             addBookCall.enqueue(new Callback<Book>() {
                 @Override
