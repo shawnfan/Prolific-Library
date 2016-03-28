@@ -60,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/button_checkout"
-            android:id="@+id/checkoutButton" />
+            android:id="@+id/checkoutButton"
+            android:onClick="checkout"/>
 
         <Button
             android:layout_width="wrap_content"
