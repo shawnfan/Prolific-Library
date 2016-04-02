@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -258,21 +256,13 @@ public class BooksDetailActivity extends AppCompatActivity {
         // Locate MenuItem with ShareActionProvider
         MenuItem item = menu.findItem(R.id.menu_share);
 
-        int currentViewPagerItem = ((ViewPager) findViewById(R.id.viewpager)).getCurrentItem();
-        setShareIntent(currentViewPagerItem);
-
-        return super.onCreateOptionsMenu(menu);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        return true;
     }
 
 
-    private void setShareIntent(int position) {
-        // BEGIN_INCLUDE(update_sap)
+    private void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
-            // Get the currently selected item, and retrieve it's share intent
-            ContentItem item = mItems.get(position);
-            Intent shareIntent = item.getShareIntent(BooksDetailActivity.this);
-
-            // Now update the ShareActionProvider with the new share intent
             mShareActionProvider.setShareIntent(shareIntent);
         }
     }

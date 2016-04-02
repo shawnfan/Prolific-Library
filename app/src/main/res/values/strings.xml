@@ -25,10 +25,7 @@
     <string name="check_out_title">Checkout Info</string>
     <string name="input_your_name">Please input your name here</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Cancel</string>]
 
 
 </resources>
