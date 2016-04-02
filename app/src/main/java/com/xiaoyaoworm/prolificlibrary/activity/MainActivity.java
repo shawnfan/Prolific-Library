@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         listView = (ListView) findViewById(R.id.bookList);
 
-        refreshBooks();
+//        refreshBooks();
     }
 
     @Override
