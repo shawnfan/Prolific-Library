@@ -16,8 +16,10 @@ import com.xiaoyaoworm.prolificlibrary.pojo.Book;
 import java.util.ArrayList;
 
 /**
- * Created by xiaoyaoworm on 3/20/16.
+ * Created by Leon Jiang(xiaoyaoworm) on 3/20/16.
+ * https://github.com/xiaoyaoworm
  */
+
 public class BooksAdapter extends ArrayAdapter<Book> {
 
     private ArrayList<Book> books;

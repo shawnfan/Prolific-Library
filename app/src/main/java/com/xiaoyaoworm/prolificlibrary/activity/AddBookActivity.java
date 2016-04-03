@@ -23,6 +23,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by Leon Jiang(xiaoyaoworm) on 3/20/16.
+ * https://github.com/xiaoyaoworm
+ */
+
 public class AddBookActivity extends AppCompatActivity {
 
     public static final String PLEASE_TYPE_BOOK_TITLE_THERE = "Please type book title there.";
@@ -68,16 +73,16 @@ public class AddBookActivity extends AppCompatActivity {
 
     public void submit(View view) {
         if (!isOnline()) {
-            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
         } else {
             if (editBookTitle.getText() == null || "".equals(editBookTitle.getText().toString().trim())) {
-                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_BOOK_TITLE_THERE, Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_BOOK_TITLE_THERE, Toast.LENGTH_SHORT).show();
             } else if (editAuthor.getText() == null || "".equals(editAuthor.getText().toString().trim())) {
-                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_AUTHOR_THERE, Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_AUTHOR_THERE, Toast.LENGTH_SHORT).show();
             } else if (editPublisher.getText() == null || "".equals(editPublisher.getText().toString().trim())) {
-                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_PUBLISHER_THERE, Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_PUBLISHER_THERE, Toast.LENGTH_SHORT).show();
             } else if (editCategories.getText() == null || "".equals(editCategories.getText().toString().trim())) {
-                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_CATEGORIES_THERE, Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getBaseContext(), PLEASE_TYPE_CATEGORIES_THERE, Toast.LENGTH_SHORT).show();
             } else {
                 Book book = new Book();
                 book.setTitle(editBookTitle.getText().toString().trim());
@@ -95,12 +100,12 @@ public class AddBookActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             Book added = response.body();
                             if (added != null) {
-                                Toast.makeText(getBaseContext(), ADD_BOOK + added.getTitle() + SUCCESSFULLY, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(), ADD_BOOK + added.getTitle() + SUCCESSFULLY, Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         } else {
                             Log.e(ADD_BOOK_ERROR, String.valueOf(response.code()));
-                            Toast.makeText(getBaseContext(), ADD_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), ADD_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -109,7 +114,7 @@ public class AddBookActivity extends AppCompatActivity {
                         t.printStackTrace();
                         Log.e(ADD_BOOK_ERROR, RESPONSE_FAILURE);
                         Log.e(ADD_BOOK_ERROR, "Exception: " + t.getMessage());
-                        Toast.makeText(getBaseContext(), ADD_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), ADD_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

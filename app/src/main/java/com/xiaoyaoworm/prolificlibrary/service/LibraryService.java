@@ -13,8 +13,10 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
- * Created by xiaoyaoworm on 3/20/16.
+ * Created by Leon Jiang(xiaoyaoworm) on 3/20/16.
+ * https://github.com/xiaoyaoworm
  */
+
 public interface LibraryService {
 
     @GET("books")

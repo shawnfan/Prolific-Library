@@ -28,6 +28,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by Leon Jiang(xiaoyaoworm) on 3/20/16.
+ * https://github.com/xiaoyaoworm
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String LIST_BOOKS_ERROR = "LIST_BOOKS_ERROR";
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.bookList);
 
         if (!isOnline()) {
-            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!isOnline()) {
-            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
         } else {
             refreshBookList();
         }
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (!isOnline()) {
-                                Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
                             } else {
                                 deleteAll();
                             }
@@ -128,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     listView.setAdapter(booksAdapter);
                 } else {
                     Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
-                    Toast.makeText(getBaseContext(), LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -136,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<ArrayList<Book>> call, Throwable t) {
                 loading.dismiss();
                 Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
-                Toast.makeText(getBaseContext(), LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -153,12 +158,12 @@ public class MainActivity extends AppCompatActivity {
                 loading.dismiss();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
-                        Toast.makeText(getBaseContext(), DELETE_ALL_SUCCESSFULLY, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), DELETE_ALL_SUCCESSFULLY, Toast.LENGTH_SHORT).show();
                         refreshBookList();
                     }
                 } else {
                     Log.d(DELETE_ALL_ERROR, String.valueOf(response.code()));
-                    Toast.makeText(getBaseContext(), DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -166,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Void> call, Throwable t) {
                 loading.dismiss();
                 Log.d(DELETE_ALL_ERROR, RESPONSE_FAILURE);
-                Toast.makeText(getBaseContext(), DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_SHORT).show();
             }
         });
     }
