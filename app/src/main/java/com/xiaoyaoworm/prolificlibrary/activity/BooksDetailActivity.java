@@ -1,5 +1,6 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by Leon Jiang(xiaoyaoworm) on 3/20/16.
+ * https://github.com/xiaoyaoworm
+ */
+
 public class BooksDetailActivity extends AppCompatActivity {
 
     public static final String GET_BOOK_INFO_ERROR = "GET_BOOK_INFO_ERROR";
@@ -45,9 +51,8 @@ public class BooksDetailActivity extends AppCompatActivity {
     public static final String UPDATE_BOOK_ERROR = "UPDATE_BOOK_ERROR";
     public static final String PUBLISHER = "Publisher";
     public static final String TAGS = "Tags: ";
-    public static final String LAST_CHECKOUT_OUT = "Last Checkout Out:";
+    public static final String LAST_CHECKOUT_OUT = "Last Check Out:";
     public static final String NULL = "NULL";
-    public static final String LAST_CHECKOUT_OUT1 = "Last Checkout Out:";
     public static final String DELETE_BOOK_SUCCESSFULLY = "Delete Book Successfully.";
     public static final String BOOK_ID_IS_WRONG_PLEASE_CHECK = "bookId is wrong, please check.";
     public static final String DELETE_BOOK = "Delete book";
@@ -93,7 +98,7 @@ public class BooksDetailActivity extends AppCompatActivity {
         deleteButton = (Button) findViewById(R.id.deleteButton);
 
         if (!isOnline()) {
-            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
         } else {
             book = new Book();
             Intent booksDetailIntent = getIntent();
@@ -119,7 +124,7 @@ public class BooksDetailActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!isOnline()) {
-                            Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+                            Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
                         } else {
                             deleteBook(bookId);
                         }
@@ -147,7 +152,7 @@ public class BooksDetailActivity extends AppCompatActivity {
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 if (!isOnline()) {
-                    Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
                 } else {
                     String username = usernameText.getText().toString();
                     book.setLastCheckedOutBy(username);
@@ -171,12 +176,14 @@ public class BooksDetailActivity extends AppCompatActivity {
 
 
     public void getBookInfo(int bookId) {
+        final ProgressDialog loading = ProgressDialog.show(this, "Reading book information", "Please wait...", false, false);
         /********* Call get Book API to get all book list  ********/
         LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Book> checkBookInfoCall = libraryServiceAPI.getBookInfo(bookId);
         checkBookInfoCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
+                loading.dismiss();
                 Log.d(GET_BOOK_INFO_RESPONSE_CODE, RESPONSE_STATUS_CODE + response.code());
                 if (response.isSuccessful()) {
                     book = response.body();
@@ -189,21 +196,22 @@ public class BooksDetailActivity extends AppCompatActivity {
                         bookLastCheckoutText.setText(LAST_CHECKOUT_OUT);
                         bookLastCheckoutByText.setText(NULL);
                     } else {
-                        bookLastCheckoutText.setText(LAST_CHECKOUT_OUT1);
+                        bookLastCheckoutText.setText(LAST_CHECKOUT_OUT);
                         bookLastCheckoutByText.setText(String.valueOf(book.getLastCheckedOutBy()) + " @ " + String.valueOf(book.getLastCheckedOut()));
                     }
 
                 } else {
                     Log.e(GET_BOOK_INFO_ERROR, String.valueOf(response.code()));
-                    Toast.makeText(getBaseContext(), GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
+                loading.dismiss();
                 Log.e(GET_BOOK_INFO_ERROR, RESPONSE_FAILURE);
                 Log.e(GET_BOOK_INFO_ERROR, "Exception: " + t.getMessage());
-                Toast.makeText(getBaseContext(), GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -218,12 +226,12 @@ public class BooksDetailActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     if (response.code() == 204) {
-                        Toast.makeText(getBaseContext(), DELETE_BOOK_SUCCESSFULLY, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), DELETE_BOOK_SUCCESSFULLY, Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
                     Log.e(DELETE_BOOK_ERROR, String.valueOf(response.code()));
-                    Toast.makeText(getBaseContext(), DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -231,7 +239,7 @@ public class BooksDetailActivity extends AppCompatActivity {
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e(DELETE_BOOK_ERROR, RESPONSE_FAILURE);
                 Log.e(DELETE_BOOK_ERROR, "Exception: " + t.getMessage());
-                Toast.makeText(getBaseContext(), DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -257,15 +265,15 @@ public class BooksDetailActivity extends AppCompatActivity {
                         bookLastCheckoutText.setText(LAST_CHECKOUT_OUT);
                         bookLastCheckoutByText.setText(NULL);
                     } else {
-                        bookLastCheckoutText.setText(LAST_CHECKOUT_OUT1);
+                        bookLastCheckoutText.setText(LAST_CHECKOUT_OUT);
                         bookLastCheckoutByText.setText(String.valueOf(updatedBook.getLastCheckedOutBy()) + " @ " + String.valueOf(updatedBook.getLastCheckedOut()));
-                        Toast.makeText(getBaseContext(), CHECK_OUT_SUCCESSFULLY_BY + updatedBook.getLastCheckedOutBy() + " at " + String.valueOf(updatedBook.getLastCheckedOut()), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), CHECK_OUT_SUCCESSFULLY_BY + updatedBook.getLastCheckedOutBy() + " at " + String.valueOf(updatedBook.getLastCheckedOut()), Toast.LENGTH_SHORT).show();
                     }
 
 
                 } else {
                     Log.e(UPDATE_BOOK_ERROR, String.valueOf(response.code()));
-                    Toast.makeText(getBaseContext(), CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -273,7 +281,7 @@ public class BooksDetailActivity extends AppCompatActivity {
             public void onFailure(Call<Book> call, Throwable t) {
                 Log.e(UPDATE_BOOK_ERROR, RESPONSE_FAILURE);
                 Log.e(UPDATE_BOOK_ERROR, "Exception: " + t.getMessage());
-                Toast.makeText(getBaseContext(), CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_SHORT).show();
             }
         });
     }

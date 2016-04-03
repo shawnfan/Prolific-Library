@@ -13,17 +13,23 @@
     tools:showIn="@layout/activity_books_detail">
 
     <LinearLayout
+        android:id="@+id/bookInfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:weightSum="1"
         android:orientation="vertical">
-
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/bookTitleText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/dummyTop" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +65,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/dump"/>
+            android:id="@+id/dumpBottom"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bookInfo"
+        android:orientation="horizontal">
 
         <Button
             android:layout_width="wrap_content"
@@ -67,17 +81,18 @@
             android:layout_gravity="center"
             android:text="@string/button_checkout"
             android:id="@+id/checkoutButton"
-            android:onClick="checkout"/>
+            android:onClick="checkout"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="50dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:text="@string/button_delete"
             android:id="@+id/deleteButton"
-            android:onClick="delete"/>
-
-
-    </LinearLayout>
+            android:onClick="delete"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp" />
+    </RelativeLayout>
 
 </RelativeLayout>

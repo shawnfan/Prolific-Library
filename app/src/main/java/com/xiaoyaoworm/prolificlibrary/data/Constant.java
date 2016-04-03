@@ -1,8 +1,10 @@
 package com.xiaoyaoworm.prolificlibrary.data;
 
 /**
- * Created by xiaoyaoworm on 3/21/16.
+ * Created by Leon Jiang(xiaoyaoworm) on 3/21/16.
+ * https://github.com/xiaoyaoworm
  */
+
 public class Constant {
 
     public static final String BASE_URL = "http://prolific-interview.herokuapp.com/56eb7034cada930009ab0998/";

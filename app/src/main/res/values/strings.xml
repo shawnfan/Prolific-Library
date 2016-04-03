@@ -4,7 +4,7 @@
     <string name="action_deleteAll">Delete All</string>
 
 
-    <string name="toolbar_book">Book</string>
+    <string name="title_book">Book</string>
     <string name="title_activity_books_detail">Detail</string>
     <string name="title_activity_add_book">Add a book</string>
 
