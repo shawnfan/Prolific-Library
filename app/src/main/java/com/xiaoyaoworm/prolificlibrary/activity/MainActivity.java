@@ -1,8 +1,11 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.xiaoyaoworm.prolificlibrary.R;
+import com.xiaoyaoworm.prolificlibrary.client.RestClient;
+import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
-import com.xiaoyaoworm.prolificlibrary.rest.RestClient;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 import com.xiaoyaoworm.prolificlibrary.ui.BooksAdapter;
 
@@ -32,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String RESPONSE_STATUS_CODE = "Response status code: ";
     public static final String LIST_BOOKS_RESPONSE_CODE = "listBooks response code";
     public static final String DELETE_ALL_SUCCESSFULLY = "Delete all books successfully.";
+    public static final String DELETE_ALL_BOOKS = "Delete All books";
+    public static final String ARE_YOU_SURE_YOU_WANT_TO_DELETE_ALL_BOOKS = "Are you sure you want to delete all books?";
+    public static final String GETTING_BOOK_LIST = "Getting book list";
+    public static final String PLEASE_WAIT = "Please wait...";
+    public static final String DELETE_ALL_BOOKS1 = "Delete all books";
+    public static final String PLEASE_WAIT1 = "Please wait...";
+    public static final String DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG = "Delete all books failed, please check log.";
+    public static final String LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG = "List all books failed, please check log.";
+
 
     public ListView listView;
 
@@ -43,13 +56,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         listView = (ListView) findViewById(R.id.bookList);
 
-//        refreshBooks();
+        if (!isOnline()) {
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        refreshBooks();
+        if (!isOnline()) {
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+        } else {
+            refreshBookList();
+        }
     }
 
     @Override
@@ -69,12 +88,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_deleteAll) {
             new android.support.v7.app.AlertDialog.Builder(this)
-                    .setTitle("Delete All books")
-                    .setMessage("Are you sure you want to delete all books?")
+                    .setTitle(DELETE_ALL_BOOKS)
+                    .setMessage(ARE_YOU_SURE_YOU_WANT_TO_DELETE_ALL_BOOKS)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            deleteAll();
-
+                            if (!isOnline()) {
+                                Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+                            } else {
+                                deleteAll();
+                            }
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -89,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshBooks() {
-        final ProgressDialog loading = ProgressDialog.show(this, "Getting book list", "Please wait...", false, false);
+    private void refreshBookList() {
+        final ProgressDialog loading = ProgressDialog.show(this, GETTING_BOOK_LIST, PLEASE_WAIT, false, false);
         /********* Call get Book API to get all book list  ********/
         LibraryService libraryServiceAPI = RestClient.getClient();
         Call<ArrayList<Book>> listBooksCall = libraryServiceAPI.listBooks();
@@ -106,18 +128,21 @@ public class MainActivity extends AppCompatActivity {
                     listView.setAdapter(booksAdapter);
                 } else {
                     Log.d(LIST_BOOKS_ERROR, String.valueOf(response.code()));
+                    Toast.makeText(getBaseContext(), LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Book>> call, Throwable t) {
+                loading.dismiss();
                 Log.d(LIST_BOOKS_ERROR, RESPONSE_FAILURE);
+                Toast.makeText(getBaseContext(), LIST_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void deleteAll() {
-        final ProgressDialog loading = ProgressDialog.show(this, "Delete all books", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(this, DELETE_ALL_BOOKS1, PLEASE_WAIT1, false, false);
         /********* Call delete all API to delete all books from list  ********/
         LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Void> deleteAllCall = libraryServiceAPI.deleteAll();
@@ -129,18 +154,29 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Toast.makeText(getBaseContext(), DELETE_ALL_SUCCESSFULLY, Toast.LENGTH_LONG).show();
+                        refreshBookList();
                     }
                 } else {
                     Log.d(DELETE_ALL_ERROR, String.valueOf(response.code()));
+                    Toast.makeText(getBaseContext(), DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                loading.dismiss();
                 Log.d(DELETE_ALL_ERROR, RESPONSE_FAILURE);
+                Toast.makeText(getBaseContext(), DELETE_ALL_BOOKS_FAILED_PLEASE_CHECK_LOG, Toast.LENGTH_LONG).show();
             }
         });
     }
 
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
 }

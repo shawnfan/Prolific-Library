@@ -1,7 +1,10 @@
 package com.xiaoyaoworm.prolificlibrary.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
@@ -20,9 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaoyaoworm.prolificlibrary.R;
+import com.xiaoyaoworm.prolificlibrary.client.RestClient;
 import com.xiaoyaoworm.prolificlibrary.data.Constant;
 import com.xiaoyaoworm.prolificlibrary.pojo.Book;
-import com.xiaoyaoworm.prolificlibrary.rest.RestClient;
 import com.xiaoyaoworm.prolificlibrary.service.LibraryService;
 
 import java.text.SimpleDateFormat;
@@ -46,8 +49,13 @@ public class BooksDetailActivity extends AppCompatActivity {
     public static final String NULL = "NULL";
     public static final String LAST_CHECKOUT_OUT1 = "Last Checkout Out:";
     public static final String DELETE_BOOK_SUCCESSFULLY = "Delete Book Successfully.";
-
-    private ShareActionProvider mShareActionProvider;
+    public static final String BOOK_ID_IS_WRONG_PLEASE_CHECK = "bookId is wrong, please check.";
+    public static final String DELETE_BOOK = "Delete book";
+    public static final String ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_BOOK = "Are you sure you want to delete this book?";
+    public static final String CHECK_OUT_SUCCESSFULLY_BY = "Check out successfully by ";
+    public static final String CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG = "Checkout book failed, please check the log.";
+    public static final String DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG = "Delete Book failed, please check the log.";
+    public static final String GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG = "Get book info failed, please check the log.";
 
     public TextView bookTitleText;
     public TextView bookAuthorText;
@@ -57,9 +65,9 @@ public class BooksDetailActivity extends AppCompatActivity {
     public TextView bookLastCheckoutByText;
     public Button checkoutButton;
     public Button deleteButton;
-
     public int bookId;
     public Book book;
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,29 +92,49 @@ public class BooksDetailActivity extends AppCompatActivity {
         checkoutButton = (Button) findViewById(R.id.checkoutButton);
         deleteButton = (Button) findViewById(R.id.deleteButton);
 
-        book = new Book();
-        Intent booksDetailIntent = getIntent();
-        bookId = booksDetailIntent.getIntExtra("bookID", -1);
-        if (bookId == -1) {
-            Log.d(GET_BOOK_INFO_ERROR, "bookId is wrong, please check.");
-            finish();
+        if (!isOnline()) {
+            Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
         } else {
-            getBookInfo(bookId);
+            book = new Book();
+            Intent booksDetailIntent = getIntent();
+            bookId = booksDetailIntent.getIntExtra("bookID", -1);
+            if (bookId == -1) {
+                Log.d(GET_BOOK_INFO_ERROR, BOOK_ID_IS_WRONG_PLEASE_CHECK);
+                finish();
+            } else {
+                getBookInfo(bookId);
+            }
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        getBookInfo(bookId);
     }
 
     public void delete(View view) {
-        deleteBook(bookId);
+        new android.support.v7.app.AlertDialog.Builder(this)
+                .setTitle(DELETE_BOOK)
+                .setMessage(ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_BOOK)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!isOnline()) {
+                            Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+                        } else {
+                            deleteBook(bookId);
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     public void checkout(View view) {
-
         LayoutInflater linf = LayoutInflater.from(this);
         final View inflator = linf.inflate(R.layout.dialog_checkout, null);
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -116,15 +144,19 @@ public class BooksDetailActivity extends AppCompatActivity {
 
         final EditText usernameText = (EditText) inflator.findViewById(R.id.username);
 
-        alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String username = usernameText.getText().toString();
-                book.setLastCheckedOutBy(username);
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat format = new SimpleDateFormat(Constant.DATE_FORMAT);
-                String current = format.format(calendar.getTime());
-                book.setLastCheckedOut(current);
-                updateBook(book);
+                if (!isOnline()) {
+                    Toast.makeText(getParent(), Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_LONG).show();
+                } else {
+                    String username = usernameText.getText().toString();
+                    book.setLastCheckedOutBy(username);
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat format = new SimpleDateFormat(Constant.DATE_FORMAT);
+                    String current = format.format(calendar.getTime());
+                    book.setLastCheckedOut(current);
+                    updateBook(book);
+                }
             }
         });
 
@@ -161,15 +193,17 @@ public class BooksDetailActivity extends AppCompatActivity {
                         bookLastCheckoutByText.setText(String.valueOf(book.getLastCheckedOutBy()) + " @ " + String.valueOf(book.getLastCheckedOut()));
                     }
 
-
                 } else {
-                    Log.d(GET_BOOK_INFO_ERROR, String.valueOf(response.code()));
+                    Log.e(GET_BOOK_INFO_ERROR, String.valueOf(response.code()));
+                    Toast.makeText(getBaseContext(), GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.d(GET_BOOK_INFO_ERROR, RESPONSE_FAILURE);
+                Log.e(GET_BOOK_INFO_ERROR, RESPONSE_FAILURE);
+                Log.e(GET_BOOK_INFO_ERROR, "Exception: " + t.getMessage());
+                Toast.makeText(getBaseContext(), GET_BOOK_INFO_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -188,13 +222,16 @@ public class BooksDetailActivity extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    Log.d(DELETE_BOOK_ERROR, String.valueOf(response.code()));
+                    Log.e(DELETE_BOOK_ERROR, String.valueOf(response.code()));
+                    Toast.makeText(getBaseContext(), DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(DELETE_BOOK_ERROR, RESPONSE_FAILURE);
+                Log.e(DELETE_BOOK_ERROR, RESPONSE_FAILURE);
+                Log.e(DELETE_BOOK_ERROR, "Exception: " + t.getMessage());
+                Toast.makeText(getBaseContext(), DELETE_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -222,17 +259,21 @@ public class BooksDetailActivity extends AppCompatActivity {
                     } else {
                         bookLastCheckoutText.setText(LAST_CHECKOUT_OUT1);
                         bookLastCheckoutByText.setText(String.valueOf(updatedBook.getLastCheckedOutBy()) + " @ " + String.valueOf(updatedBook.getLastCheckedOut()));
+                        Toast.makeText(getBaseContext(), CHECK_OUT_SUCCESSFULLY_BY + updatedBook.getLastCheckedOutBy() + " at " + String.valueOf(updatedBook.getLastCheckedOut()), Toast.LENGTH_LONG).show();
                     }
 
 
                 } else {
-                    Log.d(UPDATE_BOOK_ERROR, String.valueOf(response.code()));
+                    Log.e(UPDATE_BOOK_ERROR, String.valueOf(response.code()));
+                    Toast.makeText(getBaseContext(), CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.d(UPDATE_BOOK_ERROR, RESPONSE_FAILURE);
+                Log.e(UPDATE_BOOK_ERROR, RESPONSE_FAILURE);
+                Log.e(UPDATE_BOOK_ERROR, "Exception: " + t.getMessage());
+                Toast.makeText(getBaseContext(), CHECKOUT_BOOK_FAILED_PLEASE_CHECK_THE_LOG, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -265,6 +306,13 @@ public class BooksDetailActivity extends AppCompatActivity {
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareIntent);
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 

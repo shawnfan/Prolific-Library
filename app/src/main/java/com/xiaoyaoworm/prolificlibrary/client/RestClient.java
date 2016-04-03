@@ -1,4 +1,4 @@
-package com.xiaoyaoworm.prolificlibrary.rest;
+package com.xiaoyaoworm.prolificlibrary.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
