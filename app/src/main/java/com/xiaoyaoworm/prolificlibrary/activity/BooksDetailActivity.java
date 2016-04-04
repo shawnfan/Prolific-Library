@@ -306,14 +306,19 @@ public class BooksDetailActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.menu_share);
 
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        /** Setting a share intent */
+        mShareActionProvider.setShareIntent(getDefaultShareIntent());
         return true;
     }
 
-
-    private void setShareIntent(Intent shareIntent) {
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
+    /** Returns a share intent */
+    private Intent getDefaultShareIntent(){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
+        intent.putExtra(Intent.EXTRA_TEXT,"Extra Text");
+        return intent;
     }
 
     public boolean isOnline() {
