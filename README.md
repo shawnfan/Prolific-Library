@@ -44,6 +44,7 @@ If yes, delete it and go back to Screen1. If no, just cancel.
 [Question 1 about how to delete by using retrofit](http://stackoverflow.com/questions/36251080/retrofit-2-0-how-to-delete)
 
 [Question 2 about cannot make delete and Put work with retrofit](http://stackoverflow.com/questions/36255825/retrofit-2-0-delete-put-are-not-working)
+
 * I am using [jsonschema2pojo](http://www.jsonschema2pojo.org/) to directly generate POJO code for Prolific Library Book.
 
 **To be continued:**
