@@ -8,6 +8,7 @@
     <string name="title_activity_books_detail">Detail</string>
     <string name="title_activity_add_book">Add a book</string>
 
+
     <string name="book_title">Book Title</string>
     <string name="book_author">Author</string>
     <string name="book_publisher">Publisher</string>
@@ -20,7 +21,7 @@
 
 
     <string name="button_checkout">Check Out</string>
-    <string name="button_delete">Delete</string>
+    <string name="delete">Delete</string>
 
     <string name="check_out_title">Checkout Info</string>
     <string name="input_your_name">Please input your name here</string>
