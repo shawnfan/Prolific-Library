@@ -38,15 +38,15 @@ If yes, delete it and go back to Screen1. If no, just cancel.
 ![Screen Shot 2016-04-04 at 1.25.31 AM.png](https://bitbucket.org/repo/azAabK/images/3565981131-Screen%20Shot%202016-04-04%20at%201.25.31%20AM.png)
 
 
-Notes:
-1. Due to all the requests need internet connection, I add check Internet connection features before all the requests.
-2. Face with some issues when using retrofit 2.0, Thanks for [Lucas Crawford](http://stackoverflow.com/users/2760679/lucas-crawford) answer my retrofit questioin on StackoverFlow. 
+**Notes:**
+* Due to all the requests need internet connection, I add check Internet connection features before all the requests.
+* Face with some issues when using retrofit 2.0, Thanks for [Lucas Crawford](http://stackoverflow.com/users/2760679/lucas-crawford) answer my retrofit questioin on StackoverFlow. 
 [Question 1 about how to delete by using retrofit](http://stackoverflow.com/questions/36251080/retrofit-2-0-how-to-delete)
-[Question 2 about cannot make delete and Put work with retrofit](http://stackoverflow.com/questions/36255825/retrofit-2-0-delete-put-are-not-working)
-3. I am using [jsonschema2pojo](http://www.jsonschema2pojo.org/) to directly generate POJO code for Prolific Library Book.
 
-To be continued:
-1. Swipe to Delete feature is still in the development, I am using this API: [daimajia/AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout)
-Please check branch swipeListContent.
+[Question 2 about cannot make delete and Put work with retrofit](http://stackoverflow.com/questions/36255825/retrofit-2-0-delete-put-are-not-working)
+* I am using [jsonschema2pojo](http://www.jsonschema2pojo.org/) to directly generate POJO code for Prolific Library Book.
+
+**To be continued:**
+* Swipe to Delete feature is still in the development, I am using this API: [daimajia/AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Please check branch swipeListContent.
 
 Please contact me if you find some problems: xiaoyaoworm@gmail.com
