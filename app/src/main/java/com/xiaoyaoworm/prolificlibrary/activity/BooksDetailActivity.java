@@ -247,7 +247,7 @@ public class BooksDetailActivity extends AppCompatActivity {
     }
 
 
-    public void updateBook(Book book) {
+    private void updateBook(Book book) {
         /********* Call update Book API to update book info  ********/
         LibraryService libraryServiceAPI = RestClient.getClient();
         Call<Book> updateBookCall = libraryServiceAPI.updateBook(book.getId(), book);
