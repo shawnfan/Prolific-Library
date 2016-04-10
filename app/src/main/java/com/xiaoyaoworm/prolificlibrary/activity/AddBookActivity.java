@@ -71,7 +71,7 @@ public class AddBookActivity extends AppCompatActivity {
         submitButton = (Button) findViewById(R.id.button_submit);
     }
 
-    public void submit(View view) {
+    private void submit(View view) {
         if (!isOnline()) {
             Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
         } else {
