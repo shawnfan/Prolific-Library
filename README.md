@@ -19,6 +19,9 @@ If click on "Delete All", it will ask you "Are you sure to delete all book?" The
 If click on Add, it will go to Screen2.
 If click on any book listed there, it will go to Screen3.
 
+Update(April 9, 2016) Add swipe to delete feature in book list.
+![Screen Shot 2016-04-09 at 5.30.27 PM.png](https://bitbucket.org/repo/azAabK/images/2964360202-Screen%20Shot%202016-04-09%20at%205.30.27%20PM.png)
+
 ## Screen2: ##
 This will ask you to input Book Name, author, publisher, and tag.
 ![Screen Shot 2016-04-04 at 1.24.11 AM.png](https://bitbucket.org/repo/azAabK/images/886593069-Screen%20Shot%202016-04-04%20at%201.24.11%20AM.png)
@@ -46,8 +49,5 @@ If yes, delete it and go back to Screen1. If no, just cancel.
 [Question 2 about cannot make delete and Put work with retrofit](http://stackoverflow.com/questions/36255825/retrofit-2-0-delete-put-are-not-working)
 
 * I am using [jsonschema2pojo](http://www.jsonschema2pojo.org/) to directly generate POJO code for Prolific Library Book.
-
-**To be continued:**
-* Swipe to Delete feature is still in the development, I am using this API: [daimajia/AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Please check branch swipeListContent.
 
 Please contact me if you find some problems: xiaoyaoworm@gmail.com
