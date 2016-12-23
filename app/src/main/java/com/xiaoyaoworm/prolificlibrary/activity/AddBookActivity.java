@@ -43,7 +43,7 @@ public class AddBookActivity extends AppCompatActivity {
     public static final String SUCCESSFULLY = "> successfully";
     public static final String ADD_BOOK_FAILED_PLEASE_CHECK_THE_LOG = "Add book failed, please check the log.";
 
-
+//extra line
     public EditText editBookTitle;
     public EditText editAuthor;
     public EditText editPublisher;
@@ -51,10 +51,10 @@ public class AddBookActivity extends AppCompatActivity {
     public Button submitButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {// is savedInstanceState going to change? If not, should put 'final Bundle savedInstanceState'.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//final
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class AddBookActivity extends AppCompatActivity {
     private void submit(View view) {
         if (!isOnline()) {
             Toast.makeText(this, Constant.NO_INTERNET_CONNECTION,Toast.LENGTH_SHORT).show();
-        } else {
+        } else {// the xx.getText().toString().trim() is redudant code. Should make a function: isEmpty() to check each item: line 77 ~ line 84.
             if (editBookTitle.getText() == null || "".equals(editBookTitle.getText().toString().trim())) {
                 Toast.makeText(this.getBaseContext(), PLEASE_TYPE_BOOK_TITLE_THERE, Toast.LENGTH_SHORT).show();
             } else if (editAuthor.getText() == null || "".equals(editAuthor.getText().toString().trim())) {
@@ -84,6 +84,7 @@ public class AddBookActivity extends AppCompatActivity {
             } else if (editCategories.getText() == null || "".equals(editCategories.getText().toString().trim())) {
                 Toast.makeText(this.getBaseContext(), PLEASE_TYPE_CATEGORIES_THERE, Toast.LENGTH_SHORT).show();
             } else {
+                // Maybe the addBookCall sould be taken out as a separate function, and you can just call it from here.
                 Book book = new Book();
                 book.setTitle(editBookTitle.getText().toString().trim());
                 book.setAuthor(editAuthor.getText().toString().trim());
@@ -124,11 +125,11 @@ public class AddBookActivity extends AppCompatActivity {
     public void done(View view) {
         super.onBackPressed();
     }
-
+//missing finals as well:
     public boolean isOnline() {
         ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);//readbility: name can be better 'cm' -> connectivityManager.
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();//networkInfo
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
